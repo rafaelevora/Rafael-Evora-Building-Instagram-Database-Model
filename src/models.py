@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
+from enum import Enum
 
 
 db = SQLAlchemy()
@@ -27,7 +28,28 @@ class Comments(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     comment_text: Mapped[str] = mapped_column(String(120), nullable=False)
     author_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    # post_id: Mapped[int] = mapped_column()
+    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
     # parent_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
 
 
+class Posts(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
+    
+
+class Media(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    # type: Mapped[Enum] = mapped_column(Enum(), nullable=False)
+    url: Mapped[str] = mapped_column(String(120), nullable=False)
+    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
+    
+    
+
+class Followers(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_from_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user_to_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
+    
+    
